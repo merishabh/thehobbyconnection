@@ -3,5 +3,5 @@
   <br>
   <a href="/logout">Logout</a>
 {% else %}
-  <a href="{% url 'social:begin' 'faceboook' %}?next={{ request.path }}">Login with Twitter</a>
+  <a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Login with Facebook</a>
 {% endif %}

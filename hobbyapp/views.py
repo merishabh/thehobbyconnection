@@ -11,7 +11,6 @@ def login(request):
     # return render_to_response('login.html', context_instance=context)
     return render(request, 'login.html')
 
-
 @login_required(login_url='/')
 def home(request):
     return render_to_response('home.html')
