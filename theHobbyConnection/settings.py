@@ -11,14 +11,13 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from os.path import abspath, basename, dirname, join, normpath
 from config import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+DJANGO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
+SITE_ROOT = dirname(DJANGO_ROOT)  
+SITE_NAME = basename(DJANGO_ROOT)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -42,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social.apps.django_app.default',
+    'pipeline',
+    'rest_framework',
     'hobbyapp',
+
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -52,17 +54,17 @@ AUTHENTICATION_BACKENDS = (
    'django.contrib.auth.backends.ModelBackend',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-   'django.contrib.auth.context_processors.auth',
-   'django.core.context_processors.debug',
-   'django.core.context_processors.i18n',
-   'django.core.context_processors.media',
-   'django.core.context_processors.static',
-   'django.core.context_processors.tz',
-   'django.contrib.messages.context_processors.messages',
-   'social.apps.django_app.context_processors.backends',
-   'social.apps.django_app.context_processors.login_redirect',
-)
+# TEMPLATE_CONTEXT_PROCESSORS = (
+#    'django.contrib.auth.context_processors.auth',
+#    'django.core.context_processors.debug',
+#    'django.core.context_processors.i18n',
+#    'django.core.context_processors.media',
+#    'django.core.context_processors.static',
+#    'django.core.context_processors.tz',
+#    'django.contrib.messages.context_processors.messages',
+#    'social.apps.django_app.context_processors.backends',
+#    'social.apps.django_app.context_processors.login_redirect',
+# )
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -80,7 +82,7 @@ ROOT_URLCONF = 'theHobbyConnection.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')], 
+        'DIRS': [os.path.join(DJANGO_ROOT,'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +149,51 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static/'  
+STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))  
+STATICFILES_DIRS = ()
+
+PIPELINE = {
+    'PIPELINE_ENABLED': False,
+    'CSS_COMPRESSOR':'pipeline.compressors.NoopCompressor' ,
+    'JS_COMPRESSOR':'pipeline.compressors.uglifyjs.UglifyJSCompressor',
+    'STYLESHEETS': {
+        'thehobbyconnection_css': {
+        'source_filenames': (
+            'css/style.css',
+        ),
+        'output_filename': 'css/thehobbyconnection_css.css',
+    },
+},
+    'JAVASCRIPT': {
+        'thehobbyconnection_js': {
+            'source_filenames': (
+                'js/bower_components/jquery/dist/jquery.min.js',
+                'js/bower_components/react/JSXTransformer.js',
+                'js/bower_components/react/react-with-addons.js',
+                'js/app.browserify.js',
+            ),
+            'output_filename': 'js/thehobbyconnection_js.js',
+        }
+    }
+}
+
+# Django Pipeline (and browserify)
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+
+STATICFILES_FINDERS = (  
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'pipeline.finders.PipelineFinder',
+)
+
+# browserify-specific
+PIPELINE_COMPILERS = (  
+    'pipeline_browserify.compiler.BrowserifyCompiler',
+)
+
+if DEBUG:  
+    PIPELINE_BROWSERIFY_ARGUMENTS = '-t babelify'
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
@@ -155,3 +201,8 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
   'locale': 'ru_RU',
   'fields': 'id, name, email, age_range'
 }
+
+SOCIAL_AUTH_USER_MODEL = 'hobbyapp.User'
+
+AUTH_USER_MODEL = 'hobbyapp.User'
+
