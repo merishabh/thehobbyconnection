@@ -48,23 +48,9 @@ INSTALLED_APPS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-   'social.backends.facebook.FacebookOAuth2',
-   'social.backends.google.GoogleOAuth2',
-   'social.backends.twitter.TwitterOAuth',
-   'django.contrib.auth.backends.ModelBackend',
+    'hobbyapp.backend.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
-
-# TEMPLATE_CONTEXT_PROCESSORS = (
-#    'django.contrib.auth.context_processors.auth',
-#    'django.core.context_processors.debug',
-#    'django.core.context_processors.i18n',
-#    'django.core.context_processors.media',
-#    'django.core.context_processors.static',
-#    'django.core.context_processors.tz',
-#    'django.contrib.messages.context_processors.messages',
-#    'social.apps.django_app.context_processors.backends',
-#    'social.apps.django_app.context_processors.login_redirect',
-# )
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -151,12 +137,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'  
 STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))  
-STATICFILES_DIRS = ()
+STATICFILES_DIRS = (os.path.join(DJANGO_ROOT, "static"),
+    )
+
 
 PIPELINE = {
     'PIPELINE_ENABLED': False,
-    'CSS_COMPRESSOR':'pipeline.compressors.NoopCompressor' ,
-    'JS_COMPRESSOR':'pipeline.compressors.uglifyjs.UglifyJSCompressor',
     'STYLESHEETS': {
         'thehobbyconnection_css': {
         'source_filenames': (
@@ -171,12 +157,18 @@ PIPELINE = {
                 'js/bower_components/jquery/dist/jquery.min.js',
                 'js/bower_components/react/JSXTransformer.js',
                 'js/bower_components/react/react-with-addons.js',
-                'js/app.browserify.js',
+                'js/bower_components/react/react.js',
+                'js/bower_components/react/react-dom.js',
+                'js/bundle.js',
             ),
             'output_filename': 'js/thehobbyconnection_js.js',
         }
     }
 }
+
+
+PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.NoopCompressor'
+PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.NoopCompressor'
 
 # Django Pipeline (and browserify)
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
@@ -194,13 +186,6 @@ PIPELINE_COMPILERS = (
 
 if DEBUG:  
     PIPELINE_BROWSERIFY_ARGUMENTS = '-t babelify'
-
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-  'locale': 'ru_RU',
-  'fields': 'id, name, email, age_range'
-}
 
 SOCIAL_AUTH_USER_MODEL = 'hobbyapp.User'
 

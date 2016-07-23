@@ -16,10 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
+from hobbyapp.views import Login, AuthenticationCallback
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url('', include('social.apps.django_app.urls', namespace='social')),
+    url(r'^$', Login.as_view(), name='login'),  
+    url(r'^authentication_callback/', AuthenticationCallback.as_view(), name='login'),  
     # url(r'^$', 'hobbyapp.views.login'),
     url(r'^$', TemplateView.as_view(template_name='index.html'))
     # url(r'^home/$', 'hobbyapp.views.home'),

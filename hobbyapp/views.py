@@ -1,21 +1,50 @@
+import urllib
+import pdb
+import requests
+
 from django.shortcuts import render_to_response, redirect, render
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.template.loader import get_template
-import os.path
-# from django.template.context import RequestContext
+from django.http import Http404, HttpResponseRedirect
 
-def login(request):
-    # context = RequestContext(request, {
-    #     'request': request, 'user': request.user})
-    # return render_to_response('login.html', context_instance=context)
-    return render(request, 'login.html')
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-@login_required(login_url='/')
-def home(request):
-    return render_to_response('home.html')
+from theHobbyConnection import settings
+from django.contrib.auth import authenticate, login
+
+class Login(APIView):
+
+    def get(self, request):
+        args = {
+            'client_id': settings.SOCIAL_AUTH_FACEBOOK_KEY,
+            'scope': settings.FACEBOOK_SCOPE,
+            'redirect_uri': request.build_absolute_uri('/authentication_callback'),
+        }
+        # req = requests.get('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
+        return HttpResponseRedirect('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
 
 
-def logout(request):
-    auth_logout(request)
-    return redirect('/')
+class AuthenticationCallback(APIView):
+
+    def get(self, request):
+        code = request.GET.get('code')
+        user = authenticate(token=code, request=request)
+
+        if user.is_anonymous():
+            url = reverse('facebook_setup')
+            url += "?code=%s" % code
+
+            resp = HttpResponseRedirect(url)
+
+        else:
+            login(request, user)
+
+            url = getattr(settings, "LOGIN_REDIRECT_URL", "/home/")
+
+            resp = HttpResponseRedirect(url)
+        
+        return resp
+

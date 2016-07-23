@@ -1,20 +1,16 @@
 'use strict';
 
-alert('hi');
-var $ = require('jquery');  
-var React = require('react');
+var $ = require('./bower_components/jquery/dist/jquery.min.js'); 
+var React = require('./bower_components/react/react.min.js');
+var ReactDOM= require('./bower_components/react/react-dom.min.js');
 
-var TestApp = React.createClass({  
+var Hello = React.createClass({
   render: function() {
-    return (
-      <div className="page">
-        <h1>Oh shit! React works!</h1>
-      </div>
-    );
+    return <div>Hello {this.props.name}</div>;
   }
 });
 
-React.render(  
-  React.createElement(TestApp, null),
-  document.getElementById('content')
+ReactDOM.render(
+  <Hello name="World" />,
+  document.getElementById('container')
 );
