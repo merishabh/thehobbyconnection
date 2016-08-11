@@ -1,11 +1,6 @@
 {
   "name": "thehobbyconnection",
   "version": "1.0.0",
-  "babel": {
-    "presets": [
-      "react"
-    ]
-  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,12 +16,19 @@
     "url": "https://github.com/merishabh/thehobbyconnection/issues"
   },
   "homepage": "https://github.com/merishabh/thehobbyconnection#readme",
-  "dependencies": {
-    "babel-preset-react": "^6.11.1",
-    "babelify": "^7.3.0",
-    "browserify": "^13.0.1",
-    "react": "^15.2.1",
-    "react-dom": "^15.2.1",
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-html-replace": "^1.6.1",
+    "gulp-react": "^3.1.0",
+    "gulp-streamify": "^1.0.2",
+    "gulp-uglify": "^1.5.4",
+    "jquery": "^3.1.0",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   }
 }

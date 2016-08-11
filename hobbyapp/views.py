@@ -21,7 +21,7 @@ class Login(APIView):
         args = {
             'client_id': settings.SOCIAL_AUTH_FACEBOOK_KEY,
             'scope': settings.FACEBOOK_SCOPE,
-            'redirect_uri': request.build_absolute_uri('/authentication_callback'),
+            'redirect_uri': request.build_absolute_uri('/login/authentication_callback'),
         }
         # req = requests.get('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
         return HttpResponseRedirect('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
@@ -45,6 +45,5 @@ class AuthenticationCallback(APIView):
             url = getattr(settings, "LOGIN_REDIRECT_URL", "/home/")
 
             resp = HttpResponseRedirect(url)
-        
-        return resp
 
+        return resp

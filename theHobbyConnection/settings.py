@@ -15,8 +15,8 @@ from os.path import abspath, basename, dirname, join, normpath
 from config import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-DJANGO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  
-SITE_ROOT = dirname(DJANGO_ROOT)  
+DJANGO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SITE_ROOT = dirname(DJANGO_ROOT)
 SITE_NAME = basename(DJANGO_ROOT)
 
 # Quick-start development settings - unsuitable for production
@@ -40,11 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social.apps.django_app.default',
-    'pipeline',
     'rest_framework',
+    'corsheaders',
     'hobbyapp',
-
+    'UserPost',
+    'rest_framework_swagger',
+    'rest_auth'
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -55,11 +56,11 @@ AUTHENTICATION_BACKENDS = (
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'theHobbyConnection.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(DJANGO_ROOT,'templates')], 
+        'DIRS': [os.path.join(DJANGO_ROOT,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +82,8 @@ TEMPLATES = [
     },
 ]
 
+STATICFILES_DIRS = (DJANGO_ROOT, 'static')
+
 WSGI_APPLICATION = 'theHobbyConnection.wsgi.application'
 
 
@@ -92,7 +95,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hobbydb',
         'USER': 'rishabh',
-        'PASSWORD': 'rishabh',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -135,59 +138,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
-STATIC_URL = '/static/'  
-STATIC_ROOT = normpath(join(SITE_ROOT, 'static'))  
-STATICFILES_DIRS = (os.path.join(DJANGO_ROOT, "static"),
-    )
-
-
-PIPELINE = {
-    'PIPELINE_ENABLED': False,
-    'STYLESHEETS': {
-        'thehobbyconnection_css': {
-        'source_filenames': (
-            'css/style.css',
-        ),
-        'output_filename': 'css/thehobbyconnection_css.css',
-    },
-},
-    'JAVASCRIPT': {
-        'thehobbyconnection_js': {
-            'source_filenames': (
-                'js/bower_components/jquery/dist/jquery.min.js',
-                'js/bower_components/react/JSXTransformer.js',
-                'js/bower_components/react/react-with-addons.js',
-                'js/bower_components/react/react.js',
-                'js/bower_components/react/react-dom.js',
-                'js/bundle.js',
-            ),
-            'output_filename': 'js/thehobbyconnection_js.js',
-        }
-    }
-}
-
-
-PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.NoopCompressor'
-PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.NoopCompressor'
-
-# Django Pipeline (and browserify)
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
-
-STATICFILES_FINDERS = (  
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'pipeline.finders.PipelineFinder',
-)
-
-# browserify-specific
-PIPELINE_COMPILERS = (  
-    'pipeline_browserify.compiler.BrowserifyCompiler',
-)
-
-if DEBUG:  
-    PIPELINE_BROWSERIFY_ARGUMENTS = '-t babelify'
-
-SOCIAL_AUTH_USER_MODEL = 'hobbyapp.User'
+STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'hobbyapp.User'
 
+CORS_ORIGIN_ALLOW_ALL = True

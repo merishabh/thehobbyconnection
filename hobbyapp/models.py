@@ -6,7 +6,7 @@ from djutil.models import TimeStampedModel
 from django.contrib.auth.models import AbstractBaseUser, User
 
 class User(AbstractBaseUser, TimeStampedModel):
-    email = models.EmailField(_('email address'), max_length=254, unique=True)
+    email = models.EmailField(_('email address'), max_length=254, unique=True, primary_key=True)
     access_token = models.CharField(max_length=150)
     facebook_id = models.BigIntegerField()
     USERNAME_FIELD = 'email'
@@ -20,8 +20,3 @@ class HobbyGroupUser(TimeStampedModel):
     hobby_group_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User)
     hobby = models.ForeignKey(HobbyGroup)
-
-
-
-
-

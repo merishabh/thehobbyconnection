@@ -1,5 +1,7 @@
 from django.conf.urls import url, include
+from views import *
 
 urlpatterns = [
-url('', include('django.contrib.auth.urls', namespace='auth'))
+    url(r'^authentication_callback/', AuthenticationCallback.as_view(), name='login_callback'),
+    url(r'^$', Login.as_view(), name='login')
 ]

@@ -1,7 +1,54 @@
-{% extends 'base.html' %}
-{% block title %}TheHobbyConnection{% endblock %}
-
-{% block content %}
-<div id="content">
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css">
+  	<link rel="stylesheet" href="/static/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+      <script src="/static/jquery/dist/jquery.min.js"></script>
+    <script src="/static/bootstrap/dist/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <!-- // <script src="/static/build/build.min.js"></script>  -->
+      <div class="row">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="col-sm-6">
+              <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                  TheHobbyConnection
+                </a>
+              </div>
+          </div>
+              <div class="col-sm-6">
+                <div class="dropdown-user float-right dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                      User Name
+                       <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
+                      <li>Settings</li>
+                      <li role="separator" class="divider"></li>
+                      <li>Logout</li>
+                    </ul>
+                </div>
+              </div>
+        </div>
+      </nav>
+    </div>
+      <div class="row main-content"> 
+        <div class="container-fluid">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 middle-content populate-height-100">
+          <div class="container-fluid">
+          <div class="col-sm-9 margin-top-2">
+          <textarea class="form-control" rows="5" id="post-text-area" placeholder="What activity you are doing?"></textarea>
+        </div>
+        <div class="col-sm-3 button-post">
+          <button class="btn btn-primary" type="submit">Post</button>
+        </div>
+        </div>
+      </div>
+        <div class="col-sm-3"></div>
+      </div>
+      </div>
+  </body>
+</html>
