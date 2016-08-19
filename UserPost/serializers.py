@@ -6,7 +6,13 @@ class UserPostSerializer(serializers.ModelSerializer):
 	"""
 	Serializer for user post.
 	"""
-	# posted_by = serializers.RelatedField(source='connected_user', read_only=True)
 	class Meta:
 		model = UserPost
-		
+
+class GetUserPostSerializer(serializers.ModelSerializer):
+    """
+    Serializer for getting user post.
+    """
+    class Meta:
+        model = UserPost
+        fields = ('user_post', 'connected_user', 'first_name', 'middle_name', 'last_name', 'image', 'created_at', 'modified_at')
