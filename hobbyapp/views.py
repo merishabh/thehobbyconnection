@@ -14,17 +14,21 @@ from rest_framework import status
 
 from theHobbyConnection import settings
 from django.contrib.auth import authenticate, login
+from hobbyapp.serializers import *
+from hobbyapp import models as hobbyapp_models
 
 class Login(APIView):
 
-    def get(self, request):
-        args = {
-            'client_id': settings.SOCIAL_AUTH_FACEBOOK_KEY,
-            'scope': settings.FACEBOOK_SCOPE,
-            'redirect_uri': request.build_absolute_uri('/login/authentication_callback'),
-        }
-        # req = requests.get('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
-        return HttpResponseRedirect('https://www.facebook.com/dialog/oauth?' + urllib.urlencode(args))
+    def post(self, request):
+        try:
+            fb_user = hobbyapp_models.User.objects.get(facebook_id=request.data.get('facebook_id'))
+            fb_user.access_token = request.data.get('access_token')
+            fb_user.image = request.data.get('image')
+            fb_user.save()
+        except User.DoesNotExist:
+            fb_user = hobbyapp_models.User.objects.create(**request.data)
+        return Response("Success", status=status.HTTP_201_CREATED)
+
 
 
 class AuthenticationCallback(APIView):
